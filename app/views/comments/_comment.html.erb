@@ -1,0 +1,8 @@
+  <h4>show parent comment:</h4>
+  <%# @post.comments.each do |comment| %>
+    <p>
+      <strong><%= comment.user.email %></strong><br>
+      <%= comment.comment %>
+      <hr>
+    </p>
+  <%# end %>

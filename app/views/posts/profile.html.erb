@@ -1,0 +1,52 @@
+<!-- <div id="cracker1-button"><%#= link_to "Back", posts_path, class: "btn btn-info"%></div> -->
+
+<% if notice %>
+  <p class="alert alert-success"><%= notice %></p>
+<% end %>
+<% if alert %>
+  <p class="alert alert-danger"><%= alert %></p>
+<% end %>
+
+<button style="margin-left: 744px;">
+ <% if user_signed_in? %>
+   Logged in as <strong><%= current_user.email %></strong>
+ <span id="cracker1-button"><%= link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link', class: "btn btn-warning" %></span>
+ <span id="cracker1-button"><%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link', class: "btn btn-danger" %></span>
+ <% else %>
+  <%= link_to 'Edit Profile', edit_user_registration_path %>
+   <span id="cracker1-button"><%= link_to "Sign up", new_user_registration_path, :class => 'navbar-link' , class: "btn btn-info"  %></span>
+   <span id="cracker1-button"><%= link_to "Login", new_user_session_path, :class => 'navbar-link' , class: "btn btn-info"  %></span>
+ <% end %>
+</button>
+<br><br>
+
+
+
+<table>
+	<tbody class="table table-bordered">
+		<% @posts.each do |post| %>
+			<tr>
+				<span><%#= link_to post.id, post %></span> 
+				<span><h3><%=  post.name %></h3></span>
+				<span><%= image_tag post.image,:size => "1100x600" if post.image.attached?%></span><br><br>
+
+				<div>
+					<% pre_like = post.likes.find { |like| like.user_id == current_user.id} %>
+	        <% if pre_like %>
+	          <span id="cracker1-button"><%= link_to 'Unlike', post_like_path(post, pre_like), method: :delete, class: "btn btn-outline-primary" %></span>
+	        <% else %>
+	            <span id="cracker1-button"><%= link_to 'Like', post_likes_path(post), method: :post, class: "btn btn-outline-primary" %></span>
+	        <% end %>   
+
+	        <%= post.likes.count %> <%= (post.likes.count) == 1 ? 'Like' : 'Likes'%>
+	        &nbsp
+	      	<!-- <span id="cracker1-button"><em><%#= post.likes.count %> <%#= (post.likes.count) == 1 ? 'Like' : 'Likes'%></em></span>&nbsp&nbsp -->
+			    <span class="index-btn">
+				    <span id="cracker1-button"><%= link_to "show", post_path(post), class: "btn btn-info"%></span>&nbsp&nbsp
+				    <span id="cracker1-button"><%= link_to "Edit", edit_post_path(post), method: 'get', class: "btn btn-info"%></span>
+		    	</span>
+		    </div>
+			</tr>
+		<% end %>
+	</tbody>
+</table>

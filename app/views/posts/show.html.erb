@@ -1,0 +1,21 @@
+<!-- <h1>Posts show</h1> -->
+<table class="table table-bordered text-center">
+    
+    <tbody id="<%= @post.id %>">
+        <h3>Name : <%="#{@post.name}" %></h3><br>
+        <%= image_tag @post.image,:size => "800x400" %>
+        <br>
+
+        <% pre_like = @post.likes.find { |like| like.user_id == current_user.id} %>
+        <% if pre_like %>
+          <span id="cracker1-button"><%= link_to 'Unlike', post_like_path(@post, pre_like), method: :delete, class: "btn btn-outline-primary" %></span>
+        <% else %>
+            <span id="cracker1-button"><%= link_to 'Like', post_likes_path(@post), method: :post, class: "btn btn-outline-primary" %></span>
+        <% end %>   
+
+        <%= @post.likes.count %> <%= (@post.likes.count) == 1 ? 'Like' : 'Likes'%>
+    </tbody>
+</table>
+<div id="cracker1-button"><%= link_to "Back", posts_path, class: "btn btn-info"%></div>
+
+                

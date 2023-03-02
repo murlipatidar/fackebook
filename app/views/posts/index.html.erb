@@ -1,0 +1,138 @@
+<!-- <h1>Posts index pages</h1>
+<br>
+<div id="cracker1-button">
+	<%#= link_to "New Post", new_post_path, class: "btn btn-info btn-lg mb-3"%>
+	<%#= link_to "profile" ,profile_posts_path, class: "btn btn-info btn-lg mb-3" %>
+</div>
+	<table>
+		<thead class="table table-bordered"> 
+			<th>id</th>
+			<th>Name</th>
+		</thead>
+
+		<tbody class="table table-bordered">
+			<%# @posts.each do |post| %>
+			<tr>
+				<td><%#= link_to "show", post_path(post), class: "btn btn-info"%></td>
+		    <td id="cracker1-button"><%#= link_to "Edit", edit_post_path(post), method: 'get', class: "btn btn-info"%></td>
+	      <td id="cracker1-button"><p><%#= post.likes.count %> <%#= (post.likes.count) == 1 ? 'Like' : 'Likes'%></p></td>
+			</tr>
+			<%# end %>
+      
+      <td id="cracker1-button"><%#= link_to 'Like', post_likes_path(@post), method: :post, class: "btn btn-outline-primary" %></td> 
+
+		</tbody>
+	</table>
+ -->
+<!-- 
+<br>
+<%#= link_to "New Post", new_post_path, class: "btn btn-info btn-lg mb-3", data: { bs_toggle: 'modal', bs_target: '#newPostModal', remote: true } %>
+<br><br>
+<div class="modal fade" id="newPostModal" tabindex="-1" aria-labelledby="newPostModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newPostModalLabel">Create New Post</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div id="newPostForm">
+
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+
+
+	<table>
+		<tbody>
+			<% @posts.each do |post| %>
+			<tr>
+				<span><%#= link_to post.id, post %></span> 
+				<span><h3><%=  post.name %></h3></span>
+				<span><%= image_tag post.image,:size => "1100x600" if post.image.attached?%></span><br><br>
+
+				<div>
+					<% pre_like = post.likes.find { |like| like.user_id == current_user.id} %>
+	        <% if pre_like %>
+	          <span id="cracker1-button"><%= link_to 'Unlike', post_like_path(post, pre_like), method: :delete, class: "btn btn-outline-primary" %></span>
+	        <% else %>
+	            <span id="cracker1-button"><%= link_to 'Like', post_likes_path(post), method: :post, class: "btn btn-outline-primary" %></span>
+	        <% end %>   
+
+	        <%= post.likes.count %> <%= (post.likes.count) == 1 ? 'Like' : 'Likes'%>
+	        &nbsp
+	      	<!-- <span id="cracker1-button"><em><%#= post.likes.count %> <%#= (post.likes.count) == 1 ? 'Like' : 'Likes'%></em></span>&nbsp&nbsp -->
+			    <span class="index-btn">
+				    <span id="cracker1-button"><%= link_to "show", post_path(post), class: "btn btn-info"%></span>&nbsp&nbsp
+				    <span id="cracker1-button"><%= link_to "Edit", edit_post_path(post), method: 'get', class: "btn btn-info"%></span>
+		    	</span>
+		    </div>
+			</tr>
+			
+			<div class="comment-count">
+					<h4>Comments <span class="tag is-rounded"><%= post.comments.count %> comments</span></h4>
+      </div>
+
+      	<strong> parent comment:</strong>
+				<% post.comments.where(parent_id: nil).reverse.each do |c| %>
+				  <p>
+				    <strong><%= c.user.email %></strong><br>
+				    <%= c.comment %>
+				    <hr>
+
+			    					<div id="nested_cmd">
+							    		<strong>show child comment:</strong><br>
+										  <% c.comments.where(parent_id: c.id).reverse.each do |c| %>
+										    <strong><%= c.user.email %></strong>
+										    <%= c.comment %><br>
+											<% end %>
+
+
+												<!-- <button class="showbtn btn btn-primary">Show Form</button> <button class="hidebtn btn btn-primary">Hide Form</button>
+									      <p id="showhideForm" action="" method="post"> -->
+												<%= form_with model: [ post, c, c.comments.build ] do |form| %>
+												  <div >
+														<%= form.hidden_field :parent_id, value: c.id %>
+												    <%= form.text_field :comment %>
+												  </div>
+												   <div>
+												    <%= form.submit %>
+												  </div>
+													<% end %>
+												</p> 
+
+												<!-- <script>
+													$(document).ready(function(){
+														$('.showbtn').click(function(){
+													  		$('#showhideForm').show(500);
+													  	});
+													    $('.hidebtn').click(function(){
+													  		$('#showhideForm').hide(500);
+													  	});
+													});
+													</script> -->
+							</div>
+				  </p>
+				<% end %>
+
+
+				<h4>Post comment:</h4>
+				<%= form_with model: [ post, post.comments.build ] do |form| %>
+				  <p>
+				    <%= form.text_field :comment %>
+				  </p>
+
+				  <p>
+				    <%= form.submit %>
+				  </p>
+				<% end %>
+			<br><br><br>
+			<% end %>
+
+		</tbody>
+	</table>
+
+
+</style>
